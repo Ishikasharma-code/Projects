@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment Booking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f8f9fa; text-align: center; padding: 50px; }
+        .container { width: 400px; margin: auto; background: white; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 5px; }
+        h2 { margin-bottom: 20px; color: #333; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #28a745; color: white; cursor: pointer; }
+        button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Book a Doctor Appointment</h2>
+        <form id="appointmentForm">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="date" id="date" required>
+            <select id="doctor">
+                <option value="">Select a Doctor</option>
+                <option value="Dr. Smith">Dr. Smith (Cardiologist)</option>
+                <option value="Dr. Brown">Dr. Brown (Dermatologist)</option>
+                <option value="Dr. Adams">Dr. Adams (Neurologist)</option>
+            </select>
+            <select id="payment">
+                <option value="">Select Payment Method</option>
+                <option value="Card">Credit/Debit Card</option>
+                <option value="UPI">UPI</option>
+                <option value="Cash">Cash</option>
+            </select>
+            <button type="submit">Book Appointment</button>
+        </form>
+        <p id="confirmation"></p>
+    </div>
+
+    <script>
+        document.getElementById("appointmentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let date = document.getElementById("date").value;
+            let doctor = document.getElementById("doctor").value;
+            let payment = document.getElementById("payment").value;
+
+            if (name && email && date && doctor && payment) {
+                document.getElementById("confirmation").textContent = `✅ Appointment booked with ${doctor} on ${date}. Payment method: ${payment}.`;
+            } else {
+                alert("Please fill all fields.");
+            }
+        });
+    </script>
+
+</body>
+</html>
