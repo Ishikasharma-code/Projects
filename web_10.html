@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Finder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; }
+        nav { display: flex; justify-content: space-around; align-items: center; margin: 20px; }
+        .input-container { display: flex; align-items: center; border: 1px solid #ff6e00; padding: 5px; width: 300px; height: 50px; border-radius: 50px; position: relative; }
+        .input { margin-left: 20px; width: 100%; color: #ff6e00; border: none; background: transparent; outline: none; }
+        .magnifier { position: absolute; right: 15px; cursor: pointer; color: #ffa31a; }
+        ul li { display: inline; margin-left: 40px; cursor: pointer; }
+        main { display: flex; justify-content: center; align-items: center; margin-top: 50px; }
+        .container { width: 60%; padding: 3rem; box-shadow: 10px 10px 40px 5px #e0e0e0; display: flex; align-items: center; }
+        .img { width: 350px; height: 350px; border-radius: 300px; background: url("https://images.unsplash.com/photo-1600289031464-74d374b64991") center/cover no-repeat; }
+        .content-container h1 { font-size: 2rem; color: #2c2c2c; }
+        .content-container p { line-height: 1.4; margin-bottom: 2rem; color: #444444; width: 26rem; }
+        .main-btn { background: transparent; border: 2px solid #ffa31a; padding: 10px; color: #ffa31a; cursor: pointer; }
+        .ingredients { width: 80%; margin: 50px auto; display: flex; flex-wrap: wrap; }
+        .ing { padding: 10px 20px; border: 2px solid #ff6e00; color: #ff6e00; margin: 5px; border-radius: 100px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <form class="input-container">
+            <input type="text" class="input" placeholder="Search ...">
+            <i class="fa-solid fa-magnifying-glass magnifier"></i>
+        </form>
+        <ul>
+            <li>Breakfast</li>
+            <li>Lunch</li>
+            <li>Dinner</li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="img"></div>
+            <div class="content-container">
+                <h1 class="title">Food Name</h1>
+                <p class="info">Search for a meal and get details including ingredients.</p>
+                <button class="main-btn">$20 - Order Now</button>
+            </div>
+        </div>
+    </main>
+
+    <section class="ingredients"></section>
+
+    <script>
+        const searchMeal = async (e) => {
+            e.preventDefault();
+            const input = document.querySelector(".input");
+            const title = document.querySelector(".title");
+            const info = document.querySelector(".info");
+            const img = document.querySelector(".img");
+            const ingredientsOutput = document.querySelector(".ingredients");
+
+            const showMealInfo = (meal) => {
+                const { strMeal, strMealThumb, strInstructions } = meal;
+                title.textContent = strMeal;
+                img.style.backgroundImage = `url(${strMealThumb})`;
+                info.textContent = strInstructions;
+
+                const ingredients = [];
+                for (let i = 1; i <= 20; i++) {
+                    if (meal[`strIngredient${i}`]) {
+                        ingredients.push(`${meal[`strIngredient${i}`]} - ${meal[`strMeasure${i}`]}`);
+                    } else { break; }
+                }
+                ingredientsOutput.innerHTML = `<span>${ingredients.map(ing => `<li class="ing">${ing}</li>`).join("")}</span>`;
+            };
+
+            const fetchMealData = async (val) => {
+                const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${val}`);
+                const { meals } = await res.json();
+                return meals;
+            };
+
+            const val = input.value.trim();
+            if (val) {
+                const meals = await fetchMealData(val);
+                if (!meals) { alert("Meal not found :("); return; }
+                meals.forEach(showMealInfo);
+            } else { alert("Please enter a meal name."); }
+        };
+
+        document.querySelector("form").addEventListener("submit", searchMeal);
+        document.querySelector(".magnifier").addEventListener("click", searchMeal);
+    </script>
+
+</body>
+</html>
+
